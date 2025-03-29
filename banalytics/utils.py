@@ -13,44 +13,65 @@ class BananlyticsModel(BaseModel):
     payload: Any
     date: datetime
     kind: ItemKind
+    unique_key: str | None
+
+
+def overwrite_fields(
+    item: dict,
+    kind: ItemKind,
+) -> dict:
+    if kind == ItemKind.Chaldal_LISTING:
+        elts = []
+        for elt in item["productAvailabilityForSelectedWarehouse"]:
+            d = {}
+            for k, v in elt.items():
+                if isinstance(v, dict):
+                    v["UnixTimeMilliseconds"] = 0
+                d[k] = v
+            elts.append(d)
+        item["productAvailabilityForSelectedWarehouse"] = elts
+    return item
 
 
 def preprocess_item(
     item: dict,
-    item_type: ItemKind,
+    kind: ItemKind,
 ) -> BananlyticsModel:
+    item = overwrite_fields(item, kind)
+
+    unique = None
+    if not should_skip_deduplication(kind):
+        match kind:
+
+            case ItemKind.Meenabazar_DELIVERY_AREAS:
+                keys = ["AreaId"]
+            case ItemKind.Meenabazar_CATEGORIES:
+                keys = ["ItemCategoryId"]
+            case ItemKind.Meenabazar_LISTING:
+                keys = ["subunit", "ItemId"]
+            case ItemKind.Meenabazar_BRANCH:
+                keys = ["SubUnitId"]
+
+            case ItemKind.Chaldal_LISTING:
+                keys = ["warehouse", "objectID"]
+
+            case _:
+                assert False, "unhandeled type"
+
+        unique = urlencode({key: item[key] for key in keys})
+
     return BananlyticsModel(
+        unique_key=unique,
         date=datetime.now(),
-        kind=item_type,
+        kind=kind,
         payload=item,
     )
 
 
-def should_skip_deduplication(item: BananlyticsModel) -> bool:
-    return item.kind in (
+def should_skip_deduplication(kind: ItemKind) -> bool:
+    return kind in (
         ItemKind.Meenabazar_DELIVERY_AREAS,
         ItemKind.Meenabazar_CATEGORIES,
         ItemKind.Chaldal_CATEGORIES,
         ItemKind.Chaldal_SHOP_METADATA,
     )
-
-
-def get_item_unique_key(item: BananlyticsModel) -> str:
-    match item.kind:
-
-        case ItemKind.Meenabazar_DELIVERY_AREAS:
-            keys = ["AreaId"]
-        case ItemKind.Meenabazar_CATEGORIES:
-            keys = ["ItemCategoryId"]
-        case ItemKind.Meenabazar_LISTING:
-            keys = ["subunit", "ItemId"]
-        case ItemKind.Meenabazar_BRANCH:
-            keys = ["SubUnitId"]
-
-        case ItemKind.Chaldal_LISTING:
-            keys = ["warehouse", "objectID"]
-
-        case _:
-            assert False, "unhandeled type"
-
-    return urlencode({key: item.payload[key] for key in keys})

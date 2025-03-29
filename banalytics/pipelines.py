@@ -10,11 +10,7 @@
 
 from scrapy.exceptions import DropItem
 
-from banalytics.utils import (
-    BananlyticsModel,
-    get_item_unique_key,
-    should_skip_deduplication,
-)
+from banalytics.utils import BananlyticsModel
 
 
 class BanalyticsPipeline:
@@ -27,13 +23,12 @@ class Unique:
         self.ids_seen = set()
 
     def process_item(self, item: BananlyticsModel, _):
-        if should_skip_deduplication(item):
+        if item.unique_key is None:
             return item
 
-        key = get_item_unique_key(item)
-        if key in self.ids_seen:
+        if item.unique_key in self.ids_seen:
             raise DropItem()
 
-        self.ids_seen.add(key)
+        self.ids_seen.add(item.unique_key)
 
         return item
