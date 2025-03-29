@@ -6,7 +6,7 @@ import scrapy
 from scrapy.http.request.json_request import JsonRequest
 from scrapy.http.response import Response
 
-from banalytics.kinds import MeenabazarItemKinds
+from banalytics.kinds import ItemKind
 from banalytics.utils import preprocess_item
 
 
@@ -43,7 +43,7 @@ class MeenabazarSpider(scrapy.Spider):
                     f"/api/front/store/picup/name?SubUnitId={subunit_id}",
                     self.parse_subunit_name,
                 )
-            yield preprocess_item(item, MeenabazarItemKinds.DELIVERY_AREA)
+            yield preprocess_item(item, ItemKind.Meenabazar_DELIVERY_AREA)
 
         self.delivery_area_query_queue.remove(letter)
         if not self.delivery_area_query_queue:
@@ -78,7 +78,7 @@ class MeenabazarSpider(scrapy.Spider):
                         "ThumbSize": "lg",
                     },
                 )
-            yield preprocess_item(item, MeenabazarItemKinds.CATEGORY)
+            yield preprocess_item(item, ItemKind.Meenabazar_CATEGORY)
 
     def parse_listing(self, response: Response):
         data = json.loads(response.request.body)  # type: ignore
@@ -87,7 +87,7 @@ class MeenabazarSpider(scrapy.Spider):
             return
 
         for item in items:
-            yield preprocess_item(item, MeenabazarItemKinds.LISTING)
+            yield preprocess_item(item, ItemKind.Meenabazar_LISTING)
 
         old_start_sl = data["StartSl"]
         data["StartSl"] += data["NoOfItem"]
@@ -104,4 +104,4 @@ class MeenabazarSpider(scrapy.Spider):
         )
 
     def parse_subunit_name(self, response: Response):
-        yield preprocess_item(response.json()["data"], MeenabazarItemKinds.BRANCH)  # type: ignore
+        yield preprocess_item(response.json()["data"], ItemKind.Meenabazar_BRANCH)  # type: ignore

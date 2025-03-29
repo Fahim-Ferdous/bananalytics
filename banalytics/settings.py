@@ -66,7 +66,7 @@ ROBOTSTXT_OBEY = True
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     "banalytics.pipelines.BanalyticsPipeline": 300,
-    "banalytics.pipelines.UniqueMeenabazar": 500,
+    "banalytics.pipelines.Unique": 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

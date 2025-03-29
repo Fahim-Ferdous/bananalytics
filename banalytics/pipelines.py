@@ -10,7 +10,7 @@
 
 from scrapy.exceptions import DropItem
 
-from banalytics.kinds import MeenabazarItemKinds
+from banalytics.kinds import ItemKind
 from banalytics.utils import BananlyticsModel
 
 
@@ -19,20 +19,27 @@ class BanalyticsPipeline:
         return item
 
 
-class UniqueMeenabazar:
+class Unique:
     def __init__(self):
         self.ids_seen = set()
 
     def process_item(self, item: BananlyticsModel, _):
         match item.kind:
-            case MeenabazarItemKinds.DELIVERY_AREA:
+
+            case ItemKind.Meenabazar_DELIVERY_AREA:
                 key = "AreaId"
-            case MeenabazarItemKinds.CATEGORY:
+            case ItemKind.Meenabazar_CATEGORY:
                 key = "ItemCategoryId"
-            case MeenabazarItemKinds.LISTING:
+            case ItemKind.Meenabazar_LISTING:
                 key = "ItemId"
-            case MeenabazarItemKinds.BRANCH:
+            case ItemKind.Meenabazar_BRANCH:
                 key = "SubUnitId"
+
+            case ItemKind.Chaldal_LISTING:
+                key = "objectID"
+            case ItemKind.Chaldal_CATEGORIES | ItemKind.Chaldal_SHOP_METADATA:
+                return item
+
             case _:
                 assert False, "unhandeled type"
 
