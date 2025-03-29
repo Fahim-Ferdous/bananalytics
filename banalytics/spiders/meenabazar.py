@@ -33,7 +33,8 @@ class MeenabazarSpider(scrapy.Spider):
             )
 
     def parse_delivery_area(self, response: Response, letter: str):
-        for item in response.json()["data"]:  # type: ignore
+        area = response.json()["data"]  # type: ignore
+        for item in area:
             # NOTE: They refer branches as "Subunits".
             # Not all branches are available online.
             subunit_id = item["SubUnitId"]
@@ -43,7 +44,7 @@ class MeenabazarSpider(scrapy.Spider):
                     f"/api/front/store/picup/name?SubUnitId={subunit_id}",
                     self.parse_subunit_name,
                 )
-            yield preprocess_item(item, ItemKind.Meenabazar_DELIVERY_AREA)
+        yield preprocess_item(area, ItemKind.Meenabazar_DELIVERY_AREAS)
 
         self.delivery_area_query_queue.remove(letter)
         if not self.delivery_area_query_queue:
@@ -55,7 +56,8 @@ class MeenabazarSpider(scrapy.Spider):
             )
 
     def parse_categories(self, response: Response):
-        for item in response.json()["data"]:  # type: ignore
+        categories = response.json()["data"]  # type: ignore
+        for item in categories:
             category_id = item["ItemCategoryId"]
             category_slug = item["CategorySlug"]
 
@@ -77,17 +79,20 @@ class MeenabazarSpider(scrapy.Spider):
                         "SubUnitId": subunit,
                         "ThumbSize": "lg",
                     },
+                    cb_kwargs={"subunit": subunit},
                 )
-            yield preprocess_item(item, ItemKind.Meenabazar_CATEGORY)
+        yield preprocess_item(categories, ItemKind.Meenabazar_CATEGORIES)
 
-    def parse_listing(self, response: Response):
+    def parse_listing(self, response: Response, subunit: str):
         data = json.loads(response.request.body)  # type: ignore
         items = response.json()["data"]["Category"]  # type: ignore
         if not items:
             return
 
         for item in items:
-            yield preprocess_item(item, ItemKind.Meenabazar_LISTING)
+            yield preprocess_item(
+                item | {"subunit": subunit}, ItemKind.Meenabazar_LISTING
+            )
 
         old_start_sl = data["StartSl"]
         data["StartSl"] += data["NoOfItem"]
@@ -101,6 +106,7 @@ class MeenabazarSpider(scrapy.Spider):
             response.url,
             callback=self.parse_listing,
             data=data,
+            cb_kwargs={"subunit": subunit},
         )
 
     def parse_subunit_name(self, response: Response):

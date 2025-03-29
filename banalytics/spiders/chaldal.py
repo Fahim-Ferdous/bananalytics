@@ -59,19 +59,30 @@ class ChaldalSpider(scrapy.Spider):
                     "https://catalog.chaldal.com/searchPersonalized",
                     callback=self.parse_listings,
                     data=data,
+                    cb_kwargs={
+                        "warehouse": area["WarehouseId"],
+                        "metropolitan": area["MetropolitanAreaId"],
+                    },
                 )
 
-    def parse_listings(self, response: Response):
+    def parse_listings(self, response: Response, warehouse: str, metropolitan: str):
         payload = response.json()  # type: ignore
-        # if payload["page"] < payload["nbPages"] and response.request is not None:
-        #     request_payload = json.loads(response.request.body.decode())
-        #     request_payload["currentPageIndex"] += 1
-        #
-        #     yield JsonRequest(
-        #         "https://catalog.chaldal.com/searchPersonalized",
-        #         callback=self.parse_listings,
-        #         data=request_payload,
-        #     )
+        if payload["page"] < payload["nbPages"] and response.request is not None:
+            request_payload = json.loads(response.request.body.decode())
+            request_payload["currentPageIndex"] += 1
+
+            yield JsonRequest(
+                "https://catalog.chaldal.com/searchPersonalized",
+                callback=self.parse_listings,
+                data=request_payload,
+                cb_kwargs={
+                    "warehouse": warehouse,
+                    "metropolitan": metropolitan,
+                },
+            )
 
         for hit in payload["hits"]:
-            yield preprocess_item(hit, ItemKind.Chaldal_LISTING)
+            yield preprocess_item(
+                hit | {"warehouse": warehouse, "metropolitan": metropolitan},
+                ItemKind.Chaldal_LISTING,
+            )
