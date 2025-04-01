@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime
 from typing import Any
 from urllib.parse import urlencode
@@ -11,6 +12,7 @@ from banalytics.kinds import ItemKind
 # Not all outlets might have the same item, hence we need it.
 class BananlyticsModel(BaseModel):
     payload: Any
+    run_id: str
     date: datetime
     kind: ItemKind
     unique_key: str | None
@@ -31,6 +33,9 @@ def overwrite_fields(
             elts.append(d)
         item["productAvailabilityForSelectedWarehouse"] = elts
     return item
+
+
+run_id = hashlib.sha1(datetime.now().isoformat().encode()).hexdigest()[:7]
 
 
 def preprocess_item(
@@ -62,6 +67,7 @@ def preprocess_item(
 
     return BananlyticsModel(
         unique_key=unique,
+        run_id=run_id,
         date=datetime.now(),
         kind=kind,
         payload=item,
