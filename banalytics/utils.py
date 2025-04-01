@@ -42,8 +42,6 @@ def preprocess_item(
     item: dict,
     kind: ItemKind,
 ) -> BananlyticsModel:
-    item = overwrite_fields(item, kind)
-
     unique = None
     if not should_skip_deduplication(kind):
         match kind:
