@@ -1,5 +1,5 @@
 def main():
-    print("Hello from banalytics!")
+    print("Hello from bananalytics!")
 
 
 if __name__ == "__main__":

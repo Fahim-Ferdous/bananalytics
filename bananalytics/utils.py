@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from pydantic import BaseModel
 
-from banalytics.kinds import ItemKind
+from bananalytics.kinds import ItemKind
 
 
 # Scope is basically a namespace. For example an outlet for meenabazar.

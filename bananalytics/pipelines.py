@@ -10,10 +10,10 @@
 
 from scrapy.exceptions import DropItem
 
-from banalytics.utils import BananlyticsModel
+from bananalytics.utils import BananlyticsModel
 
 
-class BanalyticsPipeline:
+class bananalyticsPipeline:
     def process_item(self, item, _):
         return item
 

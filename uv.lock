@@ -39,7 +39,7 @@ wheels = [
 ]
 
 [[package]]
-name = "banalytics"
+name = "bananalytics"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

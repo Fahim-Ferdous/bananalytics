@@ -1,4 +1,4 @@
-# Scrapy settings for banalytics project
+# Scrapy settings for bananalytics project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,10 +9,10 @@
 
 from logging import INFO
 
-BOT_NAME = "banalytics"
+BOT_NAME = "bananalytics"
 
-SPIDER_MODULES = ["banalytics.spiders"]
-NEWSPIDER_MODULE = "banalytics.spiders"
+SPIDER_MODULES = ["bananalytics.spiders"]
+NEWSPIDER_MODULE = "bananalytics.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    "banalytics.middlewares.BanalyticsSpiderMiddleware": 543,
+#    "bananalytics.middlewares.bananalyticsSpiderMiddleware": 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    "banalytics.middlewares.BanalyticsDownloaderMiddleware": 543,
+#    "bananalytics.middlewares.bananalyticsDownloaderMiddleware": 543,
 # }
 
 # Enable or disable extensions
@@ -65,8 +65,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "banalytics.pipelines.BanalyticsPipeline": 300,
-    "banalytics.pipelines.Unique": 500,
+    "bananalytics.pipelines.bananalyticsPipeline": 300,
+    "bananalytics.pipelines.Unique": 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -96,4 +96,4 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 LOG_LEVEL = INFO
 
-LOG_FORMATTER = "banalytics.log_formatter.PoliteLogFormatter"
+LOG_FORMATTER = "bananalytics.log_formatter.PoliteLogFormatter"

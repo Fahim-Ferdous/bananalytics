@@ -10,8 +10,8 @@ import psycopg
 from psycopg.errors import UniqueViolation
 from pydantic import BaseModel
 
-from banalytics.kinds import ItemKind
-from banalytics.utils import BananlyticsModel
+from bananalytics.kinds import ItemKind
+from bananalytics.utils import BananlyticsModel
 
 parser = ArgumentParser(
     epilog="Load scraped results to database.",
@@ -20,7 +20,7 @@ parser = ArgumentParser(
 parser.add_argument(
     "files",
     nargs="+",
-    help="Load these files. Must containing jsonline serialized Banalytics objects.",
+    help="Load these files. Must containing jsonline serialized bananalytics objects.",
 )
 
 parser.add_argument("--dsn", help="database connection string")

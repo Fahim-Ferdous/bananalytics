@@ -6,8 +6,8 @@ import scrapy
 from scrapy.http.request.json_request import JsonRequest
 from scrapy.http.response import Response
 
-from banalytics.kinds import ItemKind
-from banalytics.utils import preprocess_item
+from bananalytics.kinds import ItemKind
+from bananalytics.utils import preprocess_item
 
 
 class MeenabazarSpider(scrapy.Spider):

@@ -6,7 +6,7 @@
 import scrapy
 
 
-class BanalyticsItem(scrapy.Item):
+class bananalyticsItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
