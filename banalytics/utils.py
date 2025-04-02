@@ -41,10 +41,8 @@ def preprocess_item(
     if not should_skip_deduplication(kind):
         match kind:
 
-            case ItemKind.Meenabazar_DELIVERY_AREAS:
+            case ItemKind.Meenabazar_DELIVERY_AREA:
                 keys = ["AreaId"]
-            case ItemKind.Meenabazar_CATEGORIES:
-                keys = ["ItemCategoryId"]
             case ItemKind.Meenabazar_LISTING:
                 keys = ["subunit", "ItemId"]
             case ItemKind.Meenabazar_BRANCH:
@@ -53,8 +51,8 @@ def preprocess_item(
             case ItemKind.Chaldal_LISTING:
                 keys = ["warehouse", "objectID"]
 
-            case _:
-                assert False, "unhandeled type"
+            case _ as kind:
+                raise TypeError("this kind of item is not handled", kind)
 
         unique = urlencode({key: item[key] for key in keys})
 
@@ -68,8 +66,8 @@ def preprocess_item(
 
 def should_skip_deduplication(kind: ItemKind) -> bool:
     return kind in (
-        ItemKind.Meenabazar_DELIVERY_AREAS,
         ItemKind.Meenabazar_CATEGORIES,
         ItemKind.Chaldal_CATEGORIES,
         ItemKind.Chaldal_SHOP_METADATA,
+        ItemKind.Chaldal_BRANDS,
     )

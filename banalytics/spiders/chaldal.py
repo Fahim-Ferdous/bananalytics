@@ -28,6 +28,9 @@ class ChaldalSpider(scrapy.Spider):
         categories = payload["CategoryService"]["categories"]["1"]  # "1" is the storeId
         yield preprocess_item(categories, ItemKind.Chaldal_CATEGORIES)
 
+        brands = payload["RouterService"]["manufacturerRoutes"]["1"]
+        yield preprocess_item(brands, ItemKind.Chaldal_BRANDS)
+
         idx = response.body.find(b"apiKey")
         self.api_key = response.body[idx + 15 : idx + 79].decode()
 

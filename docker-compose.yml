@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - ./postgres_data_dir:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432

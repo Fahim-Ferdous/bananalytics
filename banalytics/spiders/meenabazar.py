@@ -44,7 +44,8 @@ class MeenabazarSpider(scrapy.Spider):
                     f"/api/front/store/picup/name?SubUnitId={subunit_id}",
                     self.parse_subunit_name,
                 )
-        yield preprocess_item(area, ItemKind.Meenabazar_DELIVERY_AREAS)
+        for area in area:
+            yield preprocess_item(area, ItemKind.Meenabazar_DELIVERY_AREA)
 
         self.delivery_area_query_queue.remove(letter)
         if not self.delivery_area_query_queue:

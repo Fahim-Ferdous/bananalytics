@@ -172,3 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Our data related stuff
+raw_files/
+postgres_data_dir/
