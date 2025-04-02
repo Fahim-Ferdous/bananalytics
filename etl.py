@@ -65,6 +65,7 @@ class Row(BaseModel):
 
     quantity: float
     unit: str
+    stock: int
 
     price: float
     sale_price: float
@@ -96,6 +97,11 @@ def load(file: TextIO) -> tuple[dict, list[Row]]:
                     name=d["nameWithoutSubText"],
                     quantity=qty,
                     unit=unit,
+                    stock=(
+                        0
+                        if len(d["productAvailabilityForSelectedWarehouse"]) == 0
+                        else d["productAvailabilityForSelectedWarehouse"][0]["Quantity"]
+                    ),
                     price=d["mrp"],
                     sale_price=d["price"],
                     unique_key=model.unique_key,
@@ -119,6 +125,7 @@ def load(file: TextIO) -> tuple[dict, list[Row]]:
                     name=d["ItemDisplayName"],
                     quantity=qty,
                     unit=unit,
+                    stock=d["StockQuantity"],
                     price=d["UnitSalesPrice"],
                     sale_price=d["DiscountSalesPrice"],
                     unique_key=model.unique_key,
@@ -187,6 +194,7 @@ def insert_everything(conn: psycopg.Connection, run: Run, rows: list[Row]):
                 r.name,
                 r.quantity,
                 r.unit,
+                r.stock,
                 r.price,
                 r.sale_price,
                 r.unique_key,
@@ -196,8 +204,8 @@ def insert_everything(conn: psycopg.Connection, run: Run, rows: list[Row]):
             for r in rows
         )
         cur.executemany(
-            """insert into datapoints(item_id, name, quantity, unit, price, sale_price, unique_key, fetched_at, run_id)
-                values(%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+            """insert into datapoints(item_id, name, quantity, unit, stock, price, sale_price, unique_key, fetched_at, run_id)
+                values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
             values,
         )
         conn.commit()
@@ -221,7 +229,6 @@ if __name__ == "__main__":
         read_started = datetime.now()
         with open(filename) as f:
             metadata, rows = load(f)
-            print(metadata)
         read_ended = datetime.now()
         logging.info(
             "read file %s (%s) in %s",

@@ -17,6 +17,7 @@ create table if not exists datapoints (
 
     quantity decimal not null,
     unit varchar not null,
+    stock int not null,
 
     price decimal not null,
     discount decimal generated always as (

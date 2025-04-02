@@ -48,7 +48,8 @@ class ChaldalSpider(scrapy.Spider):
                     "query": "",
                     "productVariantId": -1,
                     "bundleId": {"case": "None"},
-                    "canSeeOutOfStock": "false",
+                    "canSeeOutOfStock": "true",
+                    "maxOutOfStockCount": {"case": "Some", "fields": [250]},
                     "filters": ["categories%3D" + str(category["Id"])],
                     "shouldShowAlternateProductsForAllOutOfStock": {
                         "case": "Some",
