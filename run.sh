@@ -1,5 +1,8 @@
 #!/bin/env bash
 
+uv sync
+source ./.venv/bin/activate
+
 files=()
 
 for vendor in chaldal meenabazar; do
