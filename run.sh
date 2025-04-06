@@ -19,8 +19,4 @@ done
 
 echo
 echo
-python etl.py --dsn "${DSN}" "${files[@]}"
-
-echo
-echo
 gzip -v "${files[@]}"
