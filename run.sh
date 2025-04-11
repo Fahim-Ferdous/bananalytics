@@ -6,7 +6,7 @@ source ./.venv/bin/activate
 files=()
 
 for vendor in chaldal meenabazar; do
-	run_id=$(head -c 8 /dev/random | shasum | head -c 7)
+	run_id=$(head -c 8 /dev/random | sha1sum | head -c 7)
 	downloaded_file=raw_files/$run_id.jsonlines
 
 	mkdir -p raw_files/
