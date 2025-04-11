@@ -12,7 +12,7 @@ for vendor in chaldal meenabazar; do
 	mkdir -p raw_files/
 
 	start=$(date '+%Y%m%d%H%M%S')
-	time scrapy crawl $vendor -o $downloaded_file
+	time ./.venv/bin/scrapy crawl $vendor -o $downloaded_file
 	end=$(date '+%Y%m%d%H%M%S')
 
 	final_file=raw_files/${vendor}_${start}_${end}_${run_id}.jsonlines
